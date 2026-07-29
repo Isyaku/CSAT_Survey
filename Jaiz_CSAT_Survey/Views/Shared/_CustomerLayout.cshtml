@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Customer Survey</title>
+    <link rel="shortcut icon" href="~/assets/images/FullColourLogo.jpg">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --jaiz-blue: #0a3d81;
+            --jaiz-gold: #ffbf00;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-jaiz {
+            background: rgba(255,255,255,.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0,0,0,.08);
+        }
+
+        .logo {
+            height: 55px;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        footer {
+            background: var(--jaiz-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .btn-jaiz {
+            background: var(--jaiz-blue);
+            color: white;
+            border: none;
+        }
+
+        .btn-jaiz:hover {
+            background: #072d5e;
+            color: white;
+        }
+
+        .text-jaiz {
+            color: var(--jaiz-blue);
+        }
+
+        .gold {
+            color: var(--jaiz-gold);
+        }
+    </style>
+
+    @RenderSection("Styles", false)
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-jaiz fixed-top">
+        <div class="container">
+
+            <a class="navbar-brand" href="#">
+                <img src="~/assets/images/logo_main.PNG" class="logo" alt="Jaiz Bank" />
+            </a>
+
+            <span class="fw-bold text-jaiz fs-5">
+                Customer Satisfaction Survey
+            </span>
+
+        </div>
+    </nav>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <footer>
+        © @DateTime.Now.Year Jaiz Bank Plc. All Rights Reserved.
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

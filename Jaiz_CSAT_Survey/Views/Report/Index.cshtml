@@ -1,0 +1,808 @@
+﻿@model DashboardViewModel
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@{
+    ViewData["Title"] = "Customer Satisfaction Dashboard";
+}
+
+<style>
+
+    .dashboard-card {
+        border: none;
+        border-radius: 12px;
+        transition: .3s;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+        }
+
+    .kpi-value {
+        font-size: 34px;
+        font-weight: 700;
+    }
+
+    .kpi-title {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .channel-card {
+        border-left: 5px solid #0d6efd;
+    }
+
+    .good {
+        color: #198754;
+        font-weight: bold;
+    }
+
+    .average {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    .poor {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .table-responsive thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: #f8f9fa;
+    }
+
+</style>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold">Customer Satisfaction Dashboard</h4>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+
+        <!-- Channel Distribution -->
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Survey Channels</h5>
+                </div>
+
+                <div class="card-body">
+                    <canvas id="channelChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- NPS Health Monotor -->
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"> NPS Health </h5>
+                </div>
+
+
+
+                <div class="card-body">
+
+                    @{
+                        var width = Math.Clamp((Model.NPSScore + 100) / 2, 0, 100);
+                    }
+
+                    <div class="progress" style="height:35px">
+
+                        <div class="progress-bar
+                 @(Model.NPSScore < 0 ? "bg-danger" :
+                   Model.NPSScore < 50 ? "bg-warning" :
+                   "bg-success")"
+                             role="progressbar"
+                             style="width:@width%">
+
+                            @Model.NPSScore
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <small>-100</small>
+                        <small>0</small>
+                        <small>+100</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+            General Survey Breakdown
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-info">
+
+                        <h2>@Model.TotalResponses</h2>
+
+                        <strong>Total Surveys</strong>
+
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-primary">
+
+                        <h2>@Model.NPSScore</h2>
+
+                        <strong>Net Promoter Score</strong>
+
+                        <br />
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-danger">
+
+                        <h2>@Model.LowRatingCount</h2>
+
+                        <strong>Low Rating Count</strong>
+
+                        <br />
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+            Net Promoter Score Breakdown
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-success">
+
+                        <h2>@Model.Promoters</h2>
+
+                        <strong>Promoters</strong>
+
+                        <br />
+
+                        <small>Scores 9–10</small>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-warning">
+
+                        <h2>@Model.Passives</h2>
+
+                        <strong>Passives</strong>
+
+                        <br />
+
+                        <small>Scores 7–8</small>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="alert alert-danger">
+
+                        <h2>@Model.Detractors</h2>
+
+                        <strong>Detractors</strong>
+
+                        <br />
+
+                        <small>Scores 0–6</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+        <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+
+                    <h5 class="mb-0"> Recent Survey Responses </h5>
+                    <a asp-action="ExportRecentSurveyResponses" asp-controller="Report" class="btn btn-light btn-sm"> <i class="bi bi-file-earmark-excel"></i> Export to Excel </a>
+
+                </div>
+
+                <div class="card-body p-0">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>Branch</th>
+
+                                <th>Name</th>
+
+                                <th>Phone</th>
+
+                                <th>Rating</th>
+
+                                <th>Channel</th>
+
+                                <th>Email</th>
+
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var survey in Model.RecentResponses)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        <strong> @survey.BranchName </strong>
+
+                                        <br />
+
+                                        <small class="text-muted">
+
+                                            @survey.SubmittedAt.ToString("dd-MMM HH:mm")
+
+                                        </small>
+
+                                    </td>
+
+                                    <td>@survey.CustomerName</td>
+
+                                    <td>@survey.CustomerPhone</td>
+
+                                    <td>
+
+                                        @if (survey.AverageRating >= 4)
+                                        {
+                                            <span class="badge bg-success">
+
+                                                ⭐ @survey.AverageRating
+
+                                            </span>
+                                        }
+                                        else if (survey.AverageRating >= 3)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+
+                                                ⭐ @survey.AverageRating
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+
+                                                ⭐ @survey.AverageRating
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @survey.Channel
+
+                                    </td>
+
+                                    <td>
+
+                                        @survey.Email
+
+                                    </td>
+
+                                </tr>
+
+                                @if (!string.IsNullOrWhiteSpace(survey.Feedback))
+                                {
+                                    <tr>
+
+                                        <td colspan="3"
+                                            class="bg-light">
+
+                                            <small>
+
+                                                💬 @survey.Feedback
+
+                                            </small>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+
+        <h4 class="mb-4">
+            Survey Channels Breakdown
+        </h4>
+
+        <div class="row">
+
+            <!-- Branch QR -->
+            <div class="mb-4">
+
+                <div class="card channel-card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="text-primary">
+                            <i class="bi bi-qr-code"></i>
+                            Branch QR
+                        </h5>
+
+                        <hr />
+
+                        <div class="row text-center">
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+                                    Total
+                                </div>
+
+                                <div class="channel-value text-primary">
+                                    @Model.BranchTotalResponses
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+                                    CSAT
+                                </div>
+
+                                <div class="channel-value text-success">
+                                    @Model.BranchCSATScore%
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+                                    NPS
+                                </div>
+
+                                <div class="channel-value text-success">
+                                    @Model.BranchNPSScore
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+                                    CSAT Avg
+                                </div>
+
+                                <div class="channel-value text-warning">
+                                    @Model.BranchCSATAverageRating
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+                                    NPS Avg
+                                </div>
+
+                                <div class="channel-value text-warning">
+                                    @Model.BranchNPSAverageRating
+                                </div>
+
+                            </div>
+
+                            <div class="col-2">
+
+                                <div class="metric-title">
+                                    Alerts
+                                </div>
+
+                                <div class="channel-value text-danger">
+                                    @Model.BranchLowRatingCount
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Email -->
+
+            <div class="mb-4">
+
+                <div class="card channel-card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="text-success">
+
+                            <i class="bi bi-envelope"></i>
+
+                            Email Survey
+
+                        </h5>
+
+                        <hr />
+
+                        <div class="row text-center">
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    Total
+
+                                </div>
+
+                                <div class="channel-value text-primary">
+
+                                    @Model.EmailTotalResponses
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    CSAT
+
+                                </div>
+
+                                <div class="channel-value text-success">
+
+                                    @Model.EmailCSATScore%
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    NPS
+
+                                </div>
+
+                                <div class="channel-value text-success">
+
+                                    @Model.EmailNPSScore
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    CSAT Avg
+
+                                </div>
+
+                                <div class="channel-value text-warning">
+
+                                    @Model.EmailCSATAverageRating
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    NPS Avg
+
+                                </div>
+
+                                <div class="channel-value text-warning">
+
+                                    @Model.EmailNPSAverageRating
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2">
+
+                                <div class="metric-title">
+
+                                    Alerts
+
+                                </div>
+
+                                <div class="channel-value text-danger">
+
+                                    @Model.EmailLowRatingCount
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Other Channels -->
+
+            <div class="mb-4">
+
+                <div class="card channel-card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="text-info">
+
+                            <i class="bi bi-globe"></i>
+
+                            Other Channels
+
+                        </h5>
+
+                        <hr />
+
+                        <div class="row text-center">
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    Total
+
+                                </div>
+
+                                <div class="channel-value text-primary">
+
+                                    @Model.OtherTotalResponses
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    CSAT
+
+                                </div>
+
+                                <div class="channel-value text-success">
+
+                                    @Model.OtherCSATScore%
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    NPS
+
+                                </div>
+
+                                <div class="channel-value text-success">
+
+                                    @Model.OtherNPSScore
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    CSAT Avg
+
+                                </div>
+
+                                <div class="channel-value text-warning">
+
+                                    @Model.OtherCSATAverageRating
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 metric-box">
+
+                                <div class="metric-title">
+
+                                    NPS Avg
+
+                                </div>
+
+                                <div class="channel-value text-warning">
+
+                                    @Model.OtherNPSAverageRating
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2">
+
+                                <div class="metric-title">
+
+                                    Alerts
+
+                                </div>
+
+                                <div class="channel-value text-danger">
+
+                                    @Model.OtherLowRatingCount
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        //============================
+        // Channel Doughnut
+        //============================
+
+        const channelLabels =
+        [
+        @foreach (var item in Model.Channels)
+        {
+            <text>'@item.Channel',</text>
+        }
+        ];
+
+        const channelValues =
+        [
+        @foreach (var item in Model.Channels)
+        {
+            <text>@item.TotalResponses,</text>
+        }
+        ];
+
+        new Chart(
+        document.getElementById("channelChart"),
+        {
+            type:'doughnut',
+
+            data:
+            {
+                labels:channelLabels,
+
+                datasets:
+                [{
+                    data:channelValues
+                }]
+            },
+
+            options:
+            {
+                responsive:true,
+
+                plugins:
+                {
+                    legend:
+                    {
+                        position:'bottom'
+                    }
+                }
+            }
+        });
+
+    </script>
+
+}

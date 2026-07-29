@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.28" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\libs\alertifyjs\src\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\controllers\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\core\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\elements\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\helpers\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\platform\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\plugins\plugin.filler\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\scales\" />
+    <Folder Include="wwwroot\assets\libs\chart.js\types\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\public\types\cypress\e2e\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\public\types\cypress\integration\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\public\types\cypress\plugins\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\public\types\cypress\support\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\public\types\src\" />
+    <Folder Include="wwwroot\assets\libs\choices.js\src\" />
+    <Folder Include="wwwroot\assets\libs\eva-icons\style\scss\" />
+    <Folder Include="wwwroot\assets\libs\flatpickr\types\" />
+    <Folder Include="wwwroot\assets\libs\flatpickr\utils\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\docs\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\examples\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\test\" />
+    <Folder Include="wwwroot\assets\libs\gridjs\src\" />
+    <Folder Include="wwwroot\assets\libs\metismenujs\types\" />
+    <Folder Include="wwwroot\assets\libs\rater-js\example\" />
+    <Folder Include="wwwroot\assets\libs\rater-js\test\" />
+    <Folder Include="wwwroot\assets\libs\swiper\types\modules\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\assets\images\customer-service.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\FullColourLogo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\login-img.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\logo_main.PNG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EmailTemplate\NotificationMail.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

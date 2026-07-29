@@ -1,0 +1,505 @@
+﻿@model SurveyViewModel
+
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewData["Title"] = "Customer Survey";
+}
+
+<style>    
+
+ .hero-section {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            rgba(10, 61, 129, 0.75),
+            rgba(10, 61, 129, 0.85)
+        ),
+        url('/assets/images/customer-service.jpg');
+
+    background-size: cover;
+    background-position:center center;
+    background-repeat: no-repeat;
+    background-attachment: inherit;
+
+    display: flex;
+    align-items: center;
+}
+
+
+    .page-container {
+        padding-top: 120px;
+        padding-bottom: 50px;
+    }
+
+    .survey-card {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(8px);
+
+    border-radius: 20px;
+    padding: 35px;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.20),
+        0 0 0 1px rgba(255,255,255,.1);
+}
+
+    .welcome-title {
+        color: #ffbf00;
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    .welcome-subtitle {
+        
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .star-rating {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ddd;
+            transition: .3s;
+        }
+
+            .star-rating input:checked ~ label,
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: #ffbf00;
+            }
+
+    .survey-title {
+        color: #0a3d81;
+        font-weight: 700;
+    }
+
+    .btn-submit {
+        background: #ffbf00;
+        color: #0a3d81;
+        font-weight: 700;
+        border: none;
+        padding: 12px;
+    }
+
+        .btn-submit:hover {
+            background: #e8ad00;
+        }
+
+    .question-label {
+        color: #0a3d81;
+        font-weight: 600;
+    }
+    .section-title {
+        color: #0a3d81;
+        border-left: 5px solid #ffbf00;
+        padding-left: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .customer-info {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+    }
+
+    .question-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.question-label {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+
+.rating-group {
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:10px;
+}
+
+
+.rating-group input {
+    display: none;
+}
+
+
+.rating-label {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor: pointer;
+    padding: 15px 8px;
+    border-radius: 12px;
+    transition: .3s ease;
+}
+
+
+.emoji {
+    display: block;
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+
+.rating-text {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #003366;
+}
+
+
+.rating-label:hover {
+    background: #eef5fb;
+}
+
+
+.rating-group input:checked + .rating-label {
+    background: #003366;
+}
+
+
+.rating-group input:checked + .rating-label .rating-text {
+    color: white;
+}
+
+
+.rating-group input:checked + .rating-label .emoji {
+    transform: scale(1.15);
+}
+ 
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .btn-submit {
+        background: #0a3d81;
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+        .btn-submit:hover {
+            background: #082f63;
+            color: white;
+        }
+
+    .required {
+        color: red;
+    }
+    .nps-rating-group {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.nps-rating-group input {
+    display: none;
+}
+
+.nps-rating-label {
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 5px;
+    transition: .2s;
+    background: white;
+}
+
+.nps-rating-label:hover {
+    transform: scale(1.05);
+    border-color: #0d6efd;
+}
+
+.nps-rating-group input:checked + .nps-rating-label {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.nps-rating-label .score {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.nps-rating-label small {
+    display: block;
+    font-size: 11px;
+}
+
+
+@@media (max-width:768px){
+.rating-group{grid-template-columns:repeat(5,1fr);gap:6px;}
+.rating-label{min-height:100px;padding:10px 4px;}
+.emoji{font-size:30px;}
+.rating-text{font-size:11px;}
+.nps-rating-group{grid-template-columns:repeat(6,1fr);}
+}
+@@media (max-width:576px){
+.rating-group{grid-template-columns:repeat(2,1fr);gap:12px;}
+.rating-label{min-height:95px;}
+.emoji{font-size:32px;}
+.rating-text{font-size:12px;}
+.nps-rating-group{grid-template-columns:repeat(4,1fr);}
+.nps-rating-label .score{font-size:18px;}
+}
+
+</style>
+
+
+@{
+    var satisfactionRatings = new[]
+    {
+        new { Value = 1, Emoji = "😠", Text = "Very Dissatisfied" },
+        new { Value = 2, Emoji = "😕", Text = "Dissatisfied" },
+        new { Value = 3, Emoji = "😐", Text = "Neutral" },
+        new { Value = 4, Emoji = "🙂", Text = "Satisfied" },
+        new { Value = 5, Emoji = "😍", Text = "Very Satisfied" }
+    };
+
+    var issueRatings = new[]
+    {
+        new { Value = 1, Emoji = "😠", Text = "Not Resolved" },
+        new { Value = 2, Emoji = "😕", Text = "Poorly Resolved" },
+        new { Value = 3, Emoji = "😐", Text = "Partially Resolved" },
+        new { Value = 4, Emoji = "🙂", Text = "Fully Resolved" },
+        new { Value = 5, Emoji = "😍", Text = "Expressly Resolved" }
+    };
+
+    var webRatings = new[]
+    {
+        new { Value = 1, Emoji = "😠", Text = "Very Poor" },
+        new { Value = 2, Emoji = "😕", Text = "Poor" },
+        new { Value = 3, Emoji = "😐", Text = "Fair" },
+        new { Value = 4, Emoji = "🙂", Text = "Good" },
+        new { Value = 5, Emoji = "😍", Text = "Excellent" }
+    };
+
+    var recommendRatings = ViewBag.RecommendRatings;   
+}
+
+
+
+<div class="hero-section">
+
+    <div class="container page-container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-6 mb-4">
+                   
+                <h3 class="welcome-title">
+                    We Value Your Feedback
+                </h3>
+
+                <p class="welcome-subtitle">
+                    Help us improve our services by sharing your experience.
+                    Your feedback is important to us.
+                </p>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="survey-card">
+
+                    <h6 class="survey-title text-center mb-4">
+                        Thank you for your feedback. This survey takes no longer than 1 minute to complete.
+                    </h6>
+
+                    <form asp-action="Submit" method="post">
+                        @if (ViewBag.Error != null){  <div asp-validation-summary="All"
+                             class="alert alert-danger">
+                        </div>
+                        }
+
+                        <input asp-for="Branch" type="hidden" value="@ViewBag.Branch" />
+                        <input asp-for="SurveyType" type="hidden" value="OtherChannels" />                        
+                        <input asp-for="TransactionId" type="hidden" value="@ViewBag.TransactionId" />
+
+                        <div class="customer-info">
+
+                        <h5 class="section-title">
+                            Customer Information
+                        </h5>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label  class="form-label">
+                                    Phone Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input asp-for="CustomerPhone"  class="form-control" placeholder="Enter phone number" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <lab asp-for="Staff" class="form-label"> Customer Name <span class="required">*</span></lab el>
+
+                                <input asp-for="CustomerName" class="form-control" placeholder="Enter your name" />
+                            </div>
+
+                            @* <div class="col-md-12">
+                                <label  class="form-label"> Desk Officer </label>
+
+                                <input asp-for="Staff" class="form-control" placeholder="Officer who attended to you" />
+                            </div> *@
+
+                        </div>
+
+                    </div>
+                  
+
+   
+
+
+                    <!-- Question 1 -->
+                    <div class="question-card">
+
+                        <label class="question-label">
+                            1. How satisfied are you with the service you received today?
+                        </label>
+
+                        <div class="rating-group">
+
+                            @foreach (var rating in satisfactionRatings)
+                            {
+                                <input asp-for="ServiceSatisfaction" type="radio" id="service_@rating.Value" value="@rating.Value" />
+
+                                <label class="rating-label" for="service_@rating.Value">
+                                    <span class="emoji">@rating.Emoji</span>
+                                    <span class="rating-text">@rating.Text</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+
+                    <!-- Question 2 -->
+                    <div class="question-card">
+
+                        <label class="question-label">
+                            2. Was your request or issue resolved to your satisfaction?
+                        </label>
+
+                        <div class="rating-group">
+
+                            @foreach (var rating in issueRatings)
+                            {
+                                <input asp-for="OtherSurveyViewModel.IssueResolution" type="radio" id="resolution_@rating.Value" value="@rating.Value" />
+
+                                <label class="rating-label" for="resolution_@rating.Value">
+                                    <span class="emoji">@rating.Emoji</span>
+                                    <span class="rating-text">@rating.Text</span>
+                                </label>
+                            }
+                        </div>
+
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-card">
+
+                        <label class="question-label">
+                            4. How likely are you to recommend us to others?
+                        </label>
+                            <small class="text-muted d-block mb-3">
+                                0 = Not at all likely &nbsp;&nbsp;&nbsp; 10 = Extremely likely
+                            </small>
+                         <div class="nps-rating-group">
+                             @foreach (var rating in recommendRatings)
+                             {
+                                 <input asp-for="RecommendationLikelihood" type="radio" id="recommend_@rating.Value" value="@rating.Value" />
+                                 <label class="nps-rating-label" for="recommend_@rating.Value">
+                                     <span class="score">@rating.Value</span>
+                                 </label>
+                             }
+                         </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-card">
+
+                        <label class="question-label">
+                            5. How would you rate the design and functionality of our website?
+                        </label>
+
+                        <div class="rating-group">
+
+                            @foreach (var rating in webRatings)
+                            {
+                                <input asp-for="OtherSurveyViewModel.WebRating" type="radio" id="web_@rating.Value" value="@rating.Value" />
+
+                                <label class="rating-label" for="web_@rating.Value">
+                                    <span class="emoji">@rating.Emoji</span>
+                                    <span class="rating-text">@rating.Text</span>
+                                </label>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="question-card">
+
+                        <label asp-for="Comments" class="question-label">
+                            6. Please tell us how we can improve your experience.
+                        </label>
+
+                        <textarea asp-for="Comments"
+                                  class="form-control" rows="5" maxlength="500" placeholder="Your feedback is valuable to us..."></textarea>
+                        <small class="text-muted">
+                            Optional but recommended.
+                        </small>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-submit">
+                            Submit Survey
+                        </button>
+                    </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

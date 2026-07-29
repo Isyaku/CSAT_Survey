@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Customer Survey</title>
+    <link rel="shortcut icon" href="~/assets/images/FullColourLogo.jpg">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --jaiz-blue: #0a3d81;
+            --jaiz-gold: #ffbf00;
+        }
+
+        /* Layout */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            padding-top: 75px; /* Equal to navbar height */
+        }
+
+        /* Navbar */
+        .navbar-jaiz {
+            background: #fff;
+            min-height: 75px;
+            box-shadow: 0 2px 15px rgba(0,0,0,.08);
+            z-index: 1055;
+        }
+
+        .logo {
+            height: 55px;
+            width: auto;
+        }
+
+        .navbar-collapse {
+            z-index: 1056;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Footer */
+        footer {
+            flex-shrink: 0;
+            background: var(--jaiz-blue);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        /* Links */
+        .nav-link {
+            font-weight: 600;
+            color: #003366 !important;
+            padding: 10px 15px !important;
+            border-radius: 8px;
+            transition: .3s;
+        }
+
+            .nav-link:hover {
+                background: #003366;
+                color: #fff !important;
+            }
+
+        .nav-link1 {
+            font-weight: 600;
+            color: rgb(25,135,84) !important;
+            padding: 10px 15px !important;
+            border-radius: 8px;
+            text-decoration: none !important;
+            transition: .3s;
+        }
+
+            .nav-link1:hover {
+                background: rgb(25,135,84);
+                color: #fff !important;
+            }
+
+        .logout-link {
+            color: #b22222 !important;
+        }
+
+            .logout-link:hover {
+                background: #b22222;
+                color: #fff !important;
+            }
+
+        /* Mobile */
+        @@media (max-width: 991.98px) {
+            .navbar-collapse
+
+        {
+            background: #fff;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.12);
+        }
+
+        .navbar-nav {
+            align-items: stretch !important;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+
+        .nav-link,
+        .nav-link1 {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .ms-lg-3 {
+            margin-left: 0 !important;
+        }
+
+        footer {
+            padding: 12px;
+            font-size: .9rem;
+        }
+
+        }
+    </style>
+
+    @RenderSection("Styles", false)
+
+</head>
+<body>
+
+    @* <nav class="navbar navbar-expand-lg navbar-jaiz fixed-top shadow-sm"> *@
+        <nav class="navbar navbar-expand-lg navbar-light navbar-jaiz fixed-top">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/assets/images/logo_main.PNG" class="logo" alt="Jaiz Bank" />
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarMenu" aria-controls="navbarMenu"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menu -->
+            <div class="collapse navbar-collapse" id="navbarMenu">
+
+                <ul class="navbar-nav ms-auto align-items-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-controller="Report" asp-action="Index">
+                            <i class="bi bi-speedometer2"></i>
+                            General Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link1 active" asp-controller="Report" asp-action="Global">
+                            <i class="bi bi-speedometer2"></i>
+                            Branch Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-3">
+                        <a class="nav-link logout-link" asp-controller="Home" asp-action="Logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <footer>
+        © @DateTime.Now.Year Jaiz Bank Plc. All Rights Reserved.
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
