@@ -123,9 +123,6 @@ namespace Jaiz_CSAT_Survey.Controllers
             vm.OtherLowRatingCount = otherSurvey.Count(x => x.ServiceSatisfaction <= 2 || x.WebRating <= 2 || x.IssueResolution <= 2 || x.RecommendationLikelihood <= 2);
 
 
-
-
-
             vm.Channels = surveys.GroupBy(x => string.IsNullOrWhiteSpace(x.SurveyType) ? "Unknown" : x.SurveyType).Select(g => new ChannelSummaryViewModel
             {
                 Channel = g.Key,
@@ -184,11 +181,26 @@ namespace Jaiz_CSAT_Survey.Controllers
             return vm;
         }
 
-        public IActionResult ExportBranchPerformance()
+      
+        public async Task<IActionResult> ExportBranchPerformance(DateTime? fromDate, DateTime? toDate)
         {
-            var surveys = _context.SurveyResponses.ToList();
+            //var surveys = _context.SurveyResponses.ToList();
 
-            var branchPerformance = surveys.GroupBy(x => string.IsNullOrWhiteSpace(x.Branch) ? "Other Channels" : x.Branch).Select(g => new BranchPerformanceViewModel
+            var surveys = _context.SurveyResponses.AsQueryable();
+            if (fromDate.HasValue)
+            {
+                surveys = surveys.Where(x => x.SubmittedAt >= fromDate.Value.Date);
+            }
+
+            if (toDate.HasValue)
+            {
+                surveys = surveys.Where(x => x.SubmittedAt < toDate.Value.Date.AddDays(1));
+            }
+
+            var branchSurveys = await surveys.OrderByDescending(x => x.SubmittedAt).ToListAsync();
+
+
+            var branchPerformance = branchSurveys.GroupBy(x => string.IsNullOrWhiteSpace(x.Branch) ? "Other Channels" : x.Branch).Select(g => new BranchPerformanceViewModel
             {
                 BranchName = g.Key,
                 SurveyCount = g.Count(),
@@ -248,13 +260,28 @@ namespace Jaiz_CSAT_Survey.Controllers
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"BranchPerformance_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
         }
 
-        public IActionResult ExportRecentSurveyResponses()
+        public async Task<IActionResult> ExportRecentSurveyResponses(DateTime? fromDate, DateTime? toDate)
+        
         {
-            var RecentSurveyResponses = _context.SurveyResponses.OrderByDescending(x => x.SubmittedAt).ToList();
+            //var RecentSurveyResponses = _context.SurveyResponses.OrderByDescending(x => x.SubmittedAt).ToList();
+
+            var RecentSurveyResponses = _context.SurveyResponses.AsQueryable();
+
+            if (fromDate.HasValue)
+            {
+                RecentSurveyResponses = RecentSurveyResponses.Where(x => x.SubmittedAt >= fromDate.Value.Date);
+            }
+
+            if (toDate.HasValue)
+            {
+                RecentSurveyResponses = RecentSurveyResponses.Where(x => x.SubmittedAt < toDate.Value.Date.AddDays(1));
+            }
+
+            var surveys = await RecentSurveyResponses.OrderByDescending(x => x.SubmittedAt).ToListAsync();
 
             using var workbook = new XLWorkbook();
 
-            var ws = workbook.Worksheets.Add("Branch Performance");
+            var ws = workbook.Worksheets.Add("Survey Responses");
 
             //Headers
             ws.Cell(1, 1).Value = "CustomerName";
@@ -310,7 +337,7 @@ namespace Jaiz_CSAT_Survey.Controllers
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);
 
-            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"RecentSurveyResponses_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"SurveyResponses_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
         }
 
         private bool SetSessionData()

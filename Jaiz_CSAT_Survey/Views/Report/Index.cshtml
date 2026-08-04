@@ -263,8 +263,36 @@
                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
 
                     <h5 class="mb-0"> Recent Survey Responses </h5>
-                    <a asp-action="ExportRecentSurveyResponses" asp-controller="Report" class="btn btn-light btn-sm"> <i class="bi bi-file-earmark-excel"></i> Export to Excel </a>
+                    @* <a asp-action="ExportRecentSurveyResponses" asp-controller="Report" class="btn btn-light btn-sm"> <i class="bi bi-file-earmark-excel"></i> Export to Excel </a> *@
 
+                    <form asp-action="ExportRecentSurveyResponses" asp-controller="Report" method="get" class="row g-2 align-items-end">
+
+                        <div class="col-auto">
+                            <label class="form-label mb-0">From</label>
+                            <input type="date"
+                                   name="fromDate"
+                                   class="form-control form-control-sm"
+                                   value="@Context.Request.Query["fromDate"]" />
+                        </div>
+
+                        <div class="col-auto">
+                            <label class="form-label mb-0">To</label>
+                            <input type="date"
+                                   name="toDate"
+                                   class="form-control form-control-sm"
+                                   value="@Context.Request.Query["toDate"]" />
+                        </div>
+
+                        <div class="col-auto">
+                            <button type="submit"
+                                    class="btn btn-light btn-sm">
+
+                                <i class="bi bi-file-earmark-excel"></i>
+                                Export
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
 
                 <div class="card-body p-0">
